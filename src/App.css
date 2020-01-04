@@ -1,0 +1,44 @@
+body {
+  background: #33344c !important;
+  color: white !important;
+  padding: 10px;
+}
+
+#root {
+  height: 100%;
+}
+
+.top-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.properties-container {
+  display: flex;
+  flex-direction: row-reverse;
+  flex-wrap: wrap;
+}
+
+.properties-set {
+  flex: 1;
+  min-width: 500px;
+}
+
+.images {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  flex: 1;
+  align-content: center;
+}
+
+.image-container:first-child {
+  margin: 10px;
+}
+
+.image-container:last-child {
+  margin-right: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
