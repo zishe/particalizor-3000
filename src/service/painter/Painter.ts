@@ -1,4 +1,4 @@
-import { isNil, range } from "ramda";
+import { isNil } from "ramda";
 import {
   createParticles,
   IParticle
@@ -17,8 +17,12 @@ export const drawImageOnCanvas = (
   isImageSourceValid: boolean,
   referenceCanvasRefCurrent: HTMLCanvasElement | null,
   destinationCanvasRefCurrent: HTMLCanvasElement | null,
-  actualValues: IActualParticalizorPropertyValues
+  actualValues: IActualParticalizorPropertyValues,
+  addAnimationRequestId: (animationRequestId: number) => void,
+  cancelAllRelevantAnimationRequests: () => void
 ) => {
+  cancelAllRelevantAnimationRequests();
+
   if (
     !isNil(referenceCanvasRefCurrent) &&
     !isNil(destinationCanvasRefCurrent)
@@ -72,7 +76,7 @@ export const drawImageOnCanvas = (
             image
           );
 
-          window.requestAnimationFrame(animate);
+          addAnimationRequestId(window.requestAnimationFrame(animate));
         };
 
         animate();
@@ -87,8 +91,12 @@ export const drawParticleVortexOnCanvas = (
   particles: IParticle[],
   vortexes: IVortex[],
   actualValues: IActualParticalizorVortexPropertyValues,
-  destinationCanvasRefCurrent: HTMLCanvasElement | null
+  destinationCanvasRefCurrent: HTMLCanvasElement | null,
+  addAnimationRequestId: (animationRequestId: number) => void,
+  cancelAllRelevantAnimationRequests: () => void
 ) => {
+  cancelAllRelevantAnimationRequests();
+
   if (!isNil(destinationCanvasRefCurrent)) {
     const {
       actualParticleNumber,
@@ -129,7 +137,7 @@ export const drawParticleVortexOnCanvas = (
           hueShift
         );
 
-        window.requestAnimationFrame(animate);
+        addAnimationRequestId(window.requestAnimationFrame(animate));
       };
 
       animate();
@@ -153,14 +161,18 @@ export const onLoadImage = (
   isImageSourceValid: boolean,
   referenceCanvasRefCurrent: HTMLCanvasElement | null,
   destinationCanvasRefCurrent: HTMLCanvasElement | null,
-  actualValues: IActualParticalizorPropertyValues
+  actualValues: IActualParticalizorPropertyValues,
+  addAnimationRequestId: (animationRequestId: number) => void,
+  cancelAllRelevantAnimationRequests: () => void
 ) =>
   drawImageOnCanvas(
     image,
     isImageSourceValid,
     referenceCanvasRefCurrent,
     destinationCanvasRefCurrent,
-    actualValues
+    actualValues,
+    addAnimationRequestId,
+    cancelAllRelevantAnimationRequests
   );
 
 export const onErrorImage = (
@@ -168,7 +180,9 @@ export const onErrorImage = (
   isImageSourceValid: boolean,
   referenceCanvasRefCurrent: HTMLCanvasElement | null,
   destinationCanvasRefCurrent: HTMLCanvasElement | null,
-  actualValues: IActualParticalizorPropertyValues
+  actualValues: IActualParticalizorPropertyValues,
+  addAnimationRequestId: (animationRequestId: number) => void,
+  cancelAllRelevantAnimationRequests: () => void
 ) => {
   image = createNewImage(() =>
     onLoadImage(
@@ -176,7 +190,9 @@ export const onErrorImage = (
       isImageSourceValid,
       referenceCanvasRefCurrent,
       destinationCanvasRefCurrent,
-      actualValues
+      actualValues,
+      addAnimationRequestId,
+      cancelAllRelevantAnimationRequests
     )
   );
 
@@ -187,7 +203,9 @@ export const onErrorImage = (
     false,
     referenceCanvasRefCurrent,
     destinationCanvasRefCurrent,
-    actualValues
+    actualValues,
+    addAnimationRequestId,
+    cancelAllRelevantAnimationRequests
   );
 };
 
@@ -195,12 +213,16 @@ export const createImageElement: (
   referenceCanvasRefCurrent: HTMLCanvasElement | null,
   destinationCanvasRefCurrent: HTMLCanvasElement | null,
   actualValues: IActualParticalizorPropertyValues,
-  imageSource: string
+  imageSource: string,
+  addAnimationRequestId: (animationRequestId: number) => void,
+  cancelAllRelevantAnimationRequests: () => void
 ) => void = (
   referenceCanvasRefCurrent,
   destinationCanvasRefCurrent,
   actualValues,
-  imageSource
+  imageSource,
+  addAnimationRequestId,
+  cancelAllRelevantAnimationRequests
 ) => {
   const image = createNewImage(() =>
     onLoadImage(
@@ -208,7 +230,9 @@ export const createImageElement: (
       true,
       referenceCanvasRefCurrent,
       destinationCanvasRefCurrent,
-      actualValues
+      actualValues,
+      addAnimationRequestId,
+      cancelAllRelevantAnimationRequests
     )
   );
 
@@ -218,7 +242,9 @@ export const createImageElement: (
       false,
       referenceCanvasRefCurrent,
       destinationCanvasRefCurrent,
-      actualValues
+      actualValues,
+      addAnimationRequestId,
+      cancelAllRelevantAnimationRequests
     );
 
   image.src = imageSource;

@@ -199,3 +199,24 @@ export const moveVortexParticles: (
     }
   });
 };
+
+export const animationRequestsContainer = () => {
+  let animationRequestIds: number[] = [];
+
+  const addAnimationRequestId = (animationRequestId: number) =>
+    animationRequestIds.push(animationRequestId);
+
+  const cancelAllRelevantAnimationRequests = () => {
+    animationRequestIds.map(animationRequestId =>
+      window.cancelAnimationFrame(animationRequestId)
+    );
+
+    animationRequestIds = [];
+  };
+
+  return {
+    animationRequestIds: animationRequestIds,
+    addAnimationRequestId: addAnimationRequestId,
+    cancelAllRelevantAnimationRequests: cancelAllRelevantAnimationRequests
+  };
+};
